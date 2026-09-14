@@ -1,5 +1,6 @@
 #ignore the virtual environment folder
 .venv/
+venv/
 #ignore the Jupyter Notebook checkpoints folder
 .ipynb_checkpoints/
 #ignore the model files
