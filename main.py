@@ -39,23 +39,23 @@ spot_corners = np.array([[[484,1123],[770,1114],[600,1203],[259,1214]],
 for spot in spot_corners:
   occupied = False  
 
-  cx = (spot[0][0]+spot[1][0]+spot[2][0]+spot[3][0]) / 4
-  cy = (spot[0][1]+spot[1][1]+spot[2][1]+spot[3][1]) / 4
+  cx = int((spot[0][0]+spot[1][0]+spot[2][0]+spot[3][0]) / 4)
+  cy = int((spot[0][1]+spot[1][1]+spot[2][1]+spot[3][1]) / 4)
   center = (cx,cy)
 
   
 
   for box in results[0].boxes :
     x1,y1,x2,y2 = map(int,box.xyxy[0])
-    if x1 <= center[0] <x2  and int(box.cls[0])== 2:
+    if x1 <= center[0] <x2 and y1 <= center[1] <= y2 and int(box.cls[0])== 2:
       occupied = True
 
   if occupied == True:
     cv2.polylines(img, [spot], isClosed=True, color=(0, 0, 225), thickness=2)
-    cv2.putText(img,"Occupied",(x1,y1-10),cv2.FONT_HERSHEY_SIMPLEX,0.9,(255,255,255),2)
+    cv2.putText(img,"Occupied",center,cv2.FONT_HERSHEY_SIMPLEX,0.9,(255,255,255),2)
   elif occupied == False:
     cv2.polylines(img, [spot], isClosed=True, color=(0, 225, 0), thickness=2)
-    cv2.putText(img,"Open",(x1,y1-10),cv2.FONT_HERSHEY_SIMPLEX,0.9,(255,255,255),2)
+    cv2.putText(img,"Open",center,cv2.FONT_HERSHEY_SIMPLEX,0.9,(255,255,255),2)
 
 
 
