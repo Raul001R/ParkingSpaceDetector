@@ -18,6 +18,7 @@ spot_corners = np.array([[[484,1123],[770,1114],[600,1203],[259,1214]],
                         [[1198,1378],[1615,1358],[1712,1646],[1074,1664]]
                         ], dtype=np.int32)
 
+Previous_Status = {}
 
 #set capture tool
 cap = cv2.VideoCapture("placeholder")
@@ -52,8 +53,8 @@ while True:
             counter += 1
     print(f"Detected {counter} cars")
 
-
-    for spot in spot_corners:
+    Current_Status = {}
+    for i, spot in enumerate(spot_corners):
         occupied = False
 
         cx = int((spot[0][0] + spot[1][0] + spot[2][0] + spot[3][0]) / 4)
@@ -64,14 +65,19 @@ while True:
             x1, y1, x2, y2 = map(int, box.xyxy[0])
             if x1 <= center[0] < x2 and y1 <= center[1] <= y2 and int(box.cls[0]) == 2:
                 occupied = True
-
+                
+                
         if occupied:
             cv2.polylines(frame, [spot], isClosed=True, color=(0, 0, 255), thickness=2)
             cv2.putText(frame, "Occupied", center, cv2.FONT_HERSHEY_SIMPLEX, 0.9, (255, 255, 255), 2)
         else:
             cv2.polylines(frame, [spot], isClosed=True, color=(0, 255, 0), thickness=2)
             cv2.putText(frame, "Open", center, cv2.FONT_HERSHEY_SIMPLEX, 0.9, (255, 255, 255), 2)
-
+    
+        Current_Status[i] = occupied
+        if Current_Status[i] != Previous_Status.get(i):
+            Previous_Status[i] = Current_Status[i]
+           
     #write the output frame with parking space occupancy
     cv2.imshow("output_with_parking_spaces.jpg", frame)
 
